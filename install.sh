@@ -10,11 +10,18 @@ mkdir -p "$HOME/arch-home-install-temp"
 cd "$HOME/arch-home-install-temp"
 
 echo "📥 Скачиваем install-скрипты…"
-curl -fL "$BASE_RAW/install-proot.sh" -o install-proot.sh
 curl -fL "$BASE_RAW/install-aptl.sh"  -o install-aptl.sh
+curl -fL "$BASE_RAW/install-proot.sh" -o install-proot.sh
 curl -fL "$BASE_RAW/install-arch.sh"  -o install-arch.sh
-curl -fL "$BASE_RAW/make-arch-script.sh"  -o make-arch-script.sh
+curl -fL "$BASE_RAW/make-arch-script.sh" -o make-arch-script.sh
 chmod +x *.sh
+
+echo "🚀 Сначала устанавливаем aptl, чтобы был PATH"
+bash install-aptl.sh
+
+# экспортируем пути сразу
+export PATH="$HOME/bin:$HOME/deb-local/usr/bin:$HOME/deb-local/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/deb-local/usr/lib:$HOME/deb-local/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
 
 echo "📦 Загружаем rootfs части…"
 PARTS=(
@@ -40,8 +47,7 @@ tar -xf arch-rootfs.tar -C "$HOME/arch-root"
 
 cd "$HOME/arch-home-install-temp"
 
-echo "🚀 Запуск install-скриптов…"
-bash install-aptl.sh
+echo "🚀 Устанавливаем proot и arch…"
 bash install-proot.sh
 bash install-arch.sh
 bash make-arch-script.sh
