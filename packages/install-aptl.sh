@@ -1,29 +1,21 @@
 #!/bin/bash
-# install-aptl.sh — локальная установка пакетов без sudo (bash/zsh/fish)
-
 echo "Устанавливаем aptl..."
 
-# Создаём папки для локальных пакетов и бинарников
 LOCAL="$HOME/deb-local"
 mkdir -p "$HOME/bin" "$LOCAL/bin" "$LOCAL/usr/bin" "$LOCAL/usr/lib" "$LOCAL/usr/lib/x86_64-linux-gnu"
 
-# Создаём скрипт aptl
 cat >"$HOME/bin/aptl" <<'EOF'
 #!/bin/bash
-# aptl — локальная установка пакетов без sudo
-
 LOCAL="$HOME/deb-local"
 mkdir -p "$LOCAL"
+
 TMP=$(mktemp -d)
 cd "$TMP" || exit 1
 
 echo "Скачиваю пакеты $@ и зависимости..."
-
 for pkg in "$@"; do
     echo "📦 $pkg"
     apt download "$pkg" 2>/dev/null
-
-    # Получаем зависимости
     deps=$(apt-cache depends "$pkg" 2>/dev/null | grep -E 'Depends:|Recommends:' | awk '{print $2}' | grep -v '<' | tr '\n' ' ')
     if [ -n "$deps" ]; then
         echo "  📚 Зависимости: $deps"
@@ -38,30 +30,19 @@ done
 
 cd ~ || exit 1
 
-# Добавляем локальные бинарники в PATH для текущей сессии
 export PATH="$LOCAL/usr/bin:$LOCAL/bin:$PATH"
 export LD_LIBRARY_PATH="$LOCAL/usr/lib:$LOCAL/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
-
 echo -e "\n✅ ГОТОВО! Установлены: $@"
 echo "📁 Файлы в: $LOCAL"
 EOF
 
 chmod +x "$HOME/bin/aptl"
 
-# Определяем shell и соответствующий конфиг
-if [ -n "$ZSH_VERSION" ]; then
-    SHELL_RC="$HOME/.zshrc"
-elif [ -n "$BASH_VERSION" ]; then
-    SHELL_RC="$HOME/.bashrc"
-elif [ -n "$FISH_VERSION" ]; then
-    SHELL_RC="$HOME/.config/fish/config.fish"
-else
-    SHELL_RC="$HOME/.profile"
-fi
+# Добавляем в shell
+SHELL_RC="$HOME/.bashrc"
+if [ -n "$ZSH_VERSION" ]; then SHELL_RC="$HOME/.zshrc"; fi
+if [ -n "$FISH_VERSION" ]; then SHELL_RC="$HOME/.config/fish/config.fish"; fi
 
-echo "Добавляем пути и alias в $SHELL_RC"
-
-# Для fish синтаксис другой
 if [[ "$SHELL_RC" == *fish* ]]; then
     grep -qxF "set -gx PATH \$HOME/bin \$HOME/deb-local/usr/bin \$HOME/deb-local/bin \$PATH" "$SHELL_RC" || \
         echo "set -gx PATH \$HOME/bin \$HOME/deb-local/usr/bin \$HOME/deb-local/bin \$PATH" >>"$SHELL_RC"
@@ -76,10 +57,7 @@ else
     grep -qxF "alias aptl='$HOME/bin/aptl'" "$SHELL_RC" || echo "alias aptl='$HOME/bin/aptl'" >>"$SHELL_RC"
 fi
 
-# Экспортируем в текущую сессию сразу
 export PATH="$HOME/bin:$HOME/deb-local/usr/bin:$HOME/deb-local/bin:$PATH"
 export LD_LIBRARY_PATH="$HOME/deb-local/usr/lib:$HOME/deb-local/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
 alias aptl="$HOME/bin/aptl"
-
 echo "Aptl установлен ✅."
-
