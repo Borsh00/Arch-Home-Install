@@ -48,7 +48,8 @@ tar -xf arch-rootfs.tar -C "$HOME/arch-root"
 cd "$HOME/arch-home-install-temp"
 
 echo "🚀 Устанавливаем proot и arch…"
-bash install-proot.sh
+#bash install-aptl.sh
+#bash install-proot.sh
 bash install-arch.sh
 bash make-arch-script.sh
 
