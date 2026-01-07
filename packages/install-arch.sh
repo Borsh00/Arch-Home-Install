@@ -1,11 +1,12 @@
 #!/bin/bash
-
 echo "Загрузка arch-rootfs"
-cd ../arch-rootfs/
-cat arch-rootfs.part-* >arch-rootfs.tar.gz
-echo "Распаковка arch-rootfs"
-mkdir -p ~/arch-root
-tar -xzf ~/arch-install/arch-rootfs/arch-rootfs.tar.gz -C ~
-rm ~/arch-install/arch-rootfs/arch-rootfs.tar.gz
+cd "$HOME/arch-rootfs"
 
-echo "Успешно распакован в Home!"
+cat arch-rootfs.part-* > arch-rootfs.tar
+
+echo "Распаковка arch-rootfs"
+mkdir -p "$HOME/arch-root"
+tar -xf arch-rootfs.tar -C "$HOME/arch-root"
+
+rm arch-rootfs.tar
+echo "Успешно распакован в $HOME/arch-root"
