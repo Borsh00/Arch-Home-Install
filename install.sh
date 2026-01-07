@@ -21,15 +21,32 @@ echo "📦 Скачиваю rootfs части из релиза…"
 mkdir -p "$HOME/arch-rootfs"
 cd "$HOME/arch-rootfs"
 
-# Скачиваем все части из релиза
-for p in arch-rootfs.part-*; do
-  curl -L -O "$RELEASE_BASE/$p"
+PARTS=(
+  arch-rootfs.part-aa
+  arch-rootfs.part-ab
+  arch-rootfs.part-ac
+  arch-rootfs.part-ad
+  arch-rootfs.part-ae
+  arch-rootfs.part-af
+  arch-rootfs.part-ag
+  arch-rootfs.part-ah
+  arch-rootfs.part-ai
+  arch-rootfs.part-aj
+  arch-rootfs.part-ak
+)
+
+mkdir -p "$HOME/arch-rootfs"
+cd "$HOME/arch-rootfs"
+
+for p in "${PARTS[@]}"; do
+  echo "⬇️  $p"
+  curl -fL "$RELEASE_BASE/$p" -o "$p"
 done
 
 echo "📦 Сборка rootfs:"
-cat arch-rootfs.part-* > arch-rootfs.tar.gz
+cat arch-rootfs.part-* > arch-rootfs.tar
 mkdir -p "$HOME/arch-root"
-tar -xzf arch-rootfs.tar.gz -C "$HOME/arch-root"
+tar -xf arch-rootfs.tar -C "$HOME/arch-root"
 
 echo "📁 Удаляем временные файлы…"
 rm -rf "$WORKDIR"
