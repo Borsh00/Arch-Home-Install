@@ -1,26 +1,22 @@
 #!/usr/bin/env bash
 set -e
 
-echo "⏳ Начинаю установку Arch Home Install…"
+echo "🔷 Arch-Home-Install: старт"
 
 BASE_RAW="https://raw.githubusercontent.com/Borsh00/Arch-Home-Install/main/packages"
 RELEASE_BASE="https://github.com/Borsh00/Arch-Home-Install/releases/latest/download"
 
-WORKDIR="$(mktemp -d)"
-echo "💾 Рабочая директория: $WORKDIR"
-cd "$WORKDIR"
+mkdir -p "$HOME/arch-home-install-temp"
+cd "$HOME/arch-home-install-temp"
 
-echo "📥 Скачиваю пакетные скрипты…"
-curl -fsSL "$BASE_RAW/install-proot.sh" -o install-proot.sh
-curl -fsSL "$BASE_RAW/install-aptl.sh"  -o install-aptl.sh
-curl -fsSL "$BASE_RAW/install-arch.sh"  -o install-arch.sh
+echo "📥 Скачиваем install-скрипты…"
+curl -fL "$BASE_RAW/install-proot.sh" -o install-proot.sh
+curl -fL "$BASE_RAW/install-aptl.sh"  -o install-aptl.sh
+curl -fL "$BASE_RAW/install-arch.sh"  -o install-arch.sh
 
 chmod +x *.sh
 
-echo "📦 Скачиваю rootfs части из релиза…"
-mkdir -p "$HOME/arch-rootfs"
-cd "$HOME/arch-rootfs"
-
+echo "📦 Загружаем rootfs части…"
 PARTS=(
   arch-rootfs.part-aa
   arch-rootfs.part-ab
@@ -38,24 +34,21 @@ PARTS=(
 mkdir -p "$HOME/arch-rootfs"
 cd "$HOME/arch-rootfs"
 
-for p in "${PARTS[@]}"; do
-  echo "⬇️  $p"
-  curl -fL "$RELEASE_BASE/$p" -o "$p"
+for part in "${PARTS[@]}"; do
+  echo "⬇️  $part…"
+  curl -fL "$RELEASE_BASE/$part" -o "$part"
 done
 
-echo "📦 Сборка rootfs:"
+echo "📦 Собираем tar…"
 cat arch-rootfs.part-* > arch-rootfs.tar
 mkdir -p "$HOME/arch-root"
 tar -xf arch-rootfs.tar -C "$HOME/arch-root"
 
-echo "📁 Удаляем временные файлы…"
-rm -rf "$WORKDIR"
-echo "✅ Rootfs готов"
+cd "$HOME/arch-home-install-temp"
 
-echo "📍 Запускаю установщики…"
-bash "$WORKDIR/install-proot.sh"
-bash "$WORKDIR/install-aptl.sh"
-bash "$WORKDIR/install-arch.sh"
+echo "🚀 Запуск install-скриптов…"
+bash install-proot.sh
+bash install-aptl.sh
+bash install-arch.sh
 
-echo "🎉 Установка завершена!"
-echo "📌 Если всё прошло OK, используйте команду 'arch' (алиас) для входа"
+echo "✅ Установка завершена"
