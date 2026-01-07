@@ -5,7 +5,7 @@ cat >"$HOME/bin/arch" <<'EOF'
 #!/bin/bash
 
 # Запуск Arch через proot
-"$HOME/deb-local/usr/bin/proot" -r "$HOME/arch-root" /bin/bash
+"$HOME/deb-local/usr/bin/proot" -r "$HOME/arch-root/arch-root" /bin/bash
 EOF
 
 chmod +x "$HOME/bin/arch"
