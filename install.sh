@@ -13,7 +13,7 @@ echo "📥 Скачиваем install-скрипты…"
 curl -fL "$BASE_RAW/install-proot.sh" -o install-proot.sh
 curl -fL "$BASE_RAW/install-aptl.sh"  -o install-aptl.sh
 curl -fL "$BASE_RAW/install-arch.sh"  -o install-arch.sh
-curl -fL "$BASE_RAW/make-arch-script.sh  -o make-arch-script.sh
+curl -fL "$BASE_RAW/make-arch-script.sh"  -o make-arch-script.sh
 chmod +x *.sh
 
 echo "📦 Загружаем rootfs части…"
