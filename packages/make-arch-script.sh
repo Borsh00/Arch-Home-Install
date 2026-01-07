@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo "Создаю скрипт для загрузки в arch"
+mkdir -p "$HOME/bin"
 cat >"$HOME/bin/arch" <<'EOF'
 #!/bin/bash
 
