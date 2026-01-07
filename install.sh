@@ -13,6 +13,7 @@ echo "📥 Скачиваем install-скрипты…"
 curl -fL "$BASE_RAW/install-proot.sh" -o install-proot.sh
 curl -fL "$BASE_RAW/install-aptl.sh"  -o install-aptl.sh
 curl -fL "$BASE_RAW/install-arch.sh"  -o install-arch.sh
+curl -fL "$BASE_RAW/make-arch-script.sh  -o make-arch-script.sh
 chmod +x *.sh
 
 echo "📦 Загружаем rootfs части…"
@@ -40,8 +41,9 @@ tar -xf arch-rootfs.tar -C "$HOME/arch-root"
 cd "$HOME/arch-home-install-temp"
 
 echo "🚀 Запуск install-скриптов…"
-bash install-proot.sh
 bash install-aptl.sh
+bash install-proot.sh
 bash install-arch.sh
+bash make-arch-script.sh
 
 echo "✅ Установка завершена"
