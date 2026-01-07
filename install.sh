@@ -4,7 +4,7 @@ set -e
 echo "🔷 Arch-Home-Install: старт"
 
 BASE_RAW="https://raw.githubusercontent.com/Borsh00/Arch-Home-Install/main/packages"
-RELEASE_BASE="https://github.com/Borsh00/Arch-Home-Install/releases/latest/download"
+RELEASE_BASE="https://github.com/Borsh00/Arch-Home-Install/releases/tag/v1.0.0"
 
 mkdir -p "$HOME/arch-home-install-temp"
 cd "$HOME/arch-home-install-temp"
